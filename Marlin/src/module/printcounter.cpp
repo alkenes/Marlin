@@ -184,7 +184,7 @@ void PrintCounter::saveStats() {
 #endif
 
 void PrintCounter::showStats() {
-  char buffer[22];
+  char buffer[21];
 
   SERIAL_ECHOPGM(STR_STATS);
   SERIAL_ECHOLNPAIR(

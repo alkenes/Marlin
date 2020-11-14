@@ -28,22 +28,15 @@
 #include "../../module/motion.h"
 #include "../../module/planner.h"
 
-#if EXTRUDERS
-  #include "../../module/temperature.h"
-#endif
-
-static void config_prefix(PGM_P const name, PGM_P const pref=nullptr, const int8_t ind=-1) {
+static void config_prefix(PGM_P const name, PGM_P const pref=nullptr) {
   SERIAL_ECHOPGM("Config:");
   if (pref) SERIAL_ECHOPGM_P(pref);
   if (ind >= 0) { SERIAL_ECHO(ind); SERIAL_CHAR(':'); }
   SERIAL_ECHOPAIR_P(name, AS_CHAR(':'));
 }
-static void config_line(PGM_P const name, const float val, PGM_P const pref=nullptr, const int8_t ind=-1) {
-  config_prefix(name, pref, ind);
+static void config_line(PGM_P const name, const float val, PGM_P const pref=nullptr) {
+  config_prefix(name, pref);
   SERIAL_ECHOLN(val);
-}
-static void config_line_e(const int8_t e, PGM_P const name, const float val) {
-  config_line(name, val, PSTR("Extr."), e + 1);
 }
 
 /**
@@ -59,19 +52,19 @@ void GcodeSuite::M360() {
   //
   // Basics and Enabled items
   //
-  config_line(PSTR("Baudrate"),                   BAUDRATE);
-  config_line(PSTR("InputBuffer"),                MAX_CMD_SIZE);
-  config_line(PSTR("PrintlineCache"),             BUFSIZE);
-  config_line(PSTR("MixingExtruder"),             ENABLED(MIXING_EXTRUDER));
-  config_line(PSTR("SDCard"),                     ENABLED(SDSUPPORT));
-  config_line(PSTR("Fan"),                        ENABLED(HAS_FAN));
-  config_line(PSTR("LCD"),                        ENABLED(HAS_DISPLAY));
+  config_line(PSTR("Baudrate"), BAUDRATE);
+  config_line(PSTR("InputBuffer"), MAX_CMD_SIZE);
+  config_line(PSTR("PrintlineCache"), BUFSIZE);
+  config_line(PSTR("MixingExtruder"), ENABLED(MIXING_EXTRUDER));
+  config_line(PSTR("SDCard"), ENABLED(SDSUPPORT));
+  config_line(PSTR("Fan"), ENABLED(HAS_FAN));
+  config_line(PSTR("LCD"), ENABLED(HAS_DISPLAY));
   config_line(PSTR("SoftwarePowerSwitch"), 1);
   config_line(PSTR("SupportLocalFilamentchange"), ENABLED(ADVANCED_PAUSE_FEATURE));
-  config_line(PSTR("CaseLights"),                 ENABLED(CASE_LIGHT_ENABLE));
-  config_line(PSTR("ZProbe"),                     ENABLED(HAS_BED_PROBE));
-  config_line(PSTR("Autolevel"),                  ENABLED(HAS_LEVELING));
-  config_line(PSTR("EEPROM"),                     ENABLED(EEPROM_SETTINGS));
+  config_line(PSTR("CaseLights"), ENABLED(CASE_LIGHT_ENABLE));
+  config_line(PSTR("ZProbe"), ENABLED(HAS_BED_PROBE));
+  config_line(PSTR("Autolevel"), ENABLED(HAS_LEVELING));
+  config_line(PSTR("EEPROM"), ENABLED(EEPROM_SETTINGS));
 
   //
   // Homing Directions
@@ -103,15 +96,15 @@ void GcodeSuite::M360() {
     PGMSTR(UNRET_STR, "RetractionUndo");
     PGMSTR(SPEED_STR, "Speed");
     // M10 Retract with swap (long) moves
-    config_line(PSTR("Length"),     fwretract.settings.retract_length, RET_STR);
-    config_line(SPEED_STR,          fwretract.settings.retract_feedrate_mm_s, RET_STR);
-    config_line(PSTR("ZLift"),      fwretract.settings.retract_zraise, RET_STR);
+    config_line(PSTR("Length"), fwretract.settings.retract_length, RET_STR);
+    config_line(SPEED_STR, fwretract.settings.retract_feedrate_mm_s, RET_STR);
+    config_line(PSTR("ZLift"), fwretract.settings.retract_zraise, RET_STR);
     config_line(PSTR("LongLength"), fwretract.settings.swap_retract_length, RET_STR);
     // M11 Recover (undo) with swap (long) moves
-    config_line(SPEED_STR,               fwretract.settings.retract_recover_feedrate_mm_s, UNRET_STR);
-    config_line(PSTR("ExtraLength"),     fwretract.settings.retract_recover_extra, UNRET_STR);
+    config_line(SPEED_STR, fwretract.settings.retract_recover_feedrate_mm_s, UNRET_STR);
+    config_line(PSTR("ExtraLength"), fwretract.settings.retract_recover_extra, UNRET_STR);
     config_line(PSTR("ExtraLongLength"), fwretract.settings.swap_retract_recover_extra, UNRET_STR);
-    config_line(PSTR("LongSpeed"),       fwretract.settings.swap_retract_recover_feedrate_mm_s, UNRET_STR);
+    config_line(PSTR("LongSpeed"), fwretract.settings.swap_retract_recover_feedrate_mm_s, UNRET_STR);
   #endif
 
   //
